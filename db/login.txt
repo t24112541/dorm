@@ -1,0 +1,48 @@
+[
+{"username":"77e2edcc9b40441200e31dc57dbb8829","password":"77e2edcc9b40441200e31dc57dbb8829"},
+{"username":"222","password":"77e2edcc9b40441200e31dc57dbb8829"}
+]
+
+<?php
+// $myfile = fopen("./db/login.txt", "r+") or die("Unable to open file!");
+// $txt = "Mickey Mouse\n";
+// fwrite($myfile, $txt);
+// $txt = "ola Mouse\n";
+// fwrite($myfile, $txt);
+// fclose($myfile);
+
+// $myfile = fopen("./db/login.txt", "r+") or die("Unable to open file!");
+// echo fread($myfile,filesize("./db/login.txt"));
+// fclose($myfile);
+
+// $array = array('foo' => 'bar');
+// file_put_contents('foo.txt', serialize($array));
+// $array = unserialize(file_get_contents('foo.txt')));
+
+
+
+// $arr = array('username'=> md5(md5(md5("admin"))) ,'password'=> md5(md5(md5("admin"))));
+// file_put_contents('./db/login.txt',  json_encode($arr).PHP_EOL, FILE_APPEND | LOCK_EX);
+
+$my_arr = json_decode(file_get_contents('./db/login.txt'), true)  or die("Unable to open file!");
+var_dump($my_arr);
+
+foreach ($my_arr as $sh) {
+	echo "<br>".$sh['username'];
+}
+
+
+
+
+	// echo "<br>".$my_arr[0]['username'];
+	// echo "<br>".$my_arr[1]['username'];
+
+
+// echo count($my_arr);
+
+// $my_arr=array_push($my_arr, array('username'=> md5(md5(md5("admin"))) ,'password'=> md5(md5(md5("admin")))));
+// file_put_contents('./db/login.txt',  json_encode($data).PHP_EOL,FILE_APPEND);
+
+// echo $my_arr["username"]; // rollno
+
+?>
