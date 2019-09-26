@@ -13,14 +13,17 @@
 					?>
 					<input type="hidden" name="RT_ID" value=<?=$_GET['rt_edit']?>>
 				<?php } ?>
-
-
-				<input type="text" class="form-control" id="rt_name" name="rt_name" placeholder="ประเภทห้อง" <?php if(isset($_GET['rt_edit'])) echo "value=".$res['RT_NAME'];?>>
+				<textarea rows="2" class="form-control" id="rt_name" name="rt_name" placeholder="ประเภทห้อง"><?php if(isset($_GET['rt_edit'])) echo $res['RT_NAME'];?></textarea>
 			</div>
 		</div>
 		<div class="form-group">
-			<div class="col-sm-12"><center>
-				<button class="btn btn-ok" name="<?php if(isset($_GET['rt_edit'])){echo "btn_edit";}else{echo "btn_add";} ?>"><i class="fas fa-plus-square fa-1x"></i><?php if(isset($_GET['rt_edit'])){echo "บันทึกข้อมูล";}else{echo "เพิ่มประเภทห้อง";} ?> </button> </a>
+			<?php if(isset($_GET['rt_edit'])){?>
+			<div class="col-sm-6"><center>
+				<button class="btn btn-ok" name="btn_edit"><i class="fas fa-save fa-1x"></i> บันทึกข้อมูล</button> </a>
+			</div>
+			<?php } ?>
+			<div class="<?php if(isset($_GET['rt_edit'])){ echo 'col-sm-6';}else{echo 'col-sm-12';}?>" ><center>
+				<button class="btn btn-ok" name="btn_add"><i class="fas fa-plus-square fa-1x"></i> เพิ่มประเภทห้อง</button> </a>
 			</div>
 		</div>
 	</form>
@@ -28,46 +31,11 @@
 <div class="col-sm-6 " style="margin-top:30px;"><center>
 	<div class="box-content">
 
-	<?php
-	if(isset($_POST['btn_add']) && $_POST['rt_name']!=''){
-		$que_chk=oci_parse($conn,"select count(RT_NAME)as NUM from room_type where RT_NAME=:RT_NAME");
-		oci_bind_by_name($que_chk, ':rt_name', $_POST['rt_name']);
-		$r_chk=oci_execute($que_chk);
-		$res = oci_fetch_array($que_chk, OCI_ASSOC);
-		if($res['NUM']==0){
-			$que=oci_parse($conn,"insert into room_type (RT_NAME) values (:rt_name)");
-			oci_bind_by_name($que, ':rt_name', $_POST['rt_name']);
-			if(!$r=oci_execute($que)){echo "insert error";}else{echo "<meta http-equiv='refresh' content='0;url=?room_type'>";}
-		}else{ ?>
-			<script type="text/javascript">
-				document.getElementById("war").innerHTML ="พบข้อมูลที่ตรงกันในระบบ";
-				document.getElementById("rt_name").innerHTML=<?=$_POST['rt_name'];?>
-			</script>
-		<?php }
-		
-	}elseif(isset($_POST['btn_edit']) && $_POST['rt_name']!=''){
-		$que_chk=oci_parse($conn,"select count(RT_NAME)as NUM from room_type where RT_NAME=:RT_NAME");
-		oci_bind_by_name($que_chk, ':rt_name', $_POST['rt_name']);
-		$r_chk=oci_execute($que_chk);
-		$res = oci_fetch_array($que_chk, OCI_ASSOC);
-		if($res['NUM']==0){
-			$que=oci_parse($conn,"update room_type set RT_NAME=:rt_name where RT_ID=:RT_ID");
-			oci_bind_by_name($que, ':rt_name', $_POST['rt_name']);
-			oci_bind_by_name($que, ':RT_ID', $_POST['RT_ID']);
-			if(!$r=oci_execute($que)){echo "update error";}else{echo "<meta http-equiv='refresh' content='0;url=?room_type'>";}
-		}else{ ?>
-
-			<script type="text/javascript">
-				document.getElementById("war").innerHTML ="พบข้อมูลที่ตรงกันในระบบ";
-				document.getElementById("rt_name").innerHTML=<?=$_POST['rt_name'];?>
-			</script>
-		<?php }
-	}
+	<?php 
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	$que = oci_parse($conn, 'SELECT * FROM room_type');
-		$r = oci_execute($que);
-		?>
+		$r = oci_execute($que);?>
 		<table>
 			<tr>
 				<td>ประเภทห้อง</td>
@@ -85,3 +53,40 @@
 		</table>
 	</div>
 </div>
+<?php
+	if(isset($_POST['btn_add']) && $_POST['rt_name']!=''){
+		$que_chk=oci_parse($conn,"select count(RT_NAME)as NUM from room_type where RT_NAME=:RT_NAME");
+		oci_bind_by_name($que_chk, ':rt_name', $_POST['rt_name']);
+		$r_chk=oci_execute($que_chk);
+		$res = oci_fetch_array($que_chk, OCI_ASSOC);
+		// echo $res['NUM'];
+		if($res['NUM']==0){
+			$que=oci_parse($conn,"insert into room_type (RT_NAME) values (:rt_name)");
+			oci_bind_by_name($que, ':rt_name', $_POST['rt_name']);
+			if(!$r=oci_execute($que)){echo "insert error";}else{echo "<meta http-equiv='refresh' content='0;url=?room_type'>";}
+		}else{ ?>
+			<p style="margin-top:10px" align="center" class="cv_important" id="war">พบข้อมูลที่ตรงกันในระบบ</p>
+			<script type="text/javascript">
+				document.getElementById("war").innerHTML ="พบข้อมูลที่ตรงกันในระบบ";
+				document.getElementById("rt_name").innerHTML=<?=$_POST['rt_name'];?>;
+			</script>
+		<?php }
+		
+	}elseif(isset($_POST['btn_edit']) && $_POST['rt_name']!=''){
+		$que_chk=oci_parse($conn,"select count(RT_NAME)as NUM from room_type where RT_NAME=:RT_NAME");
+		oci_bind_by_name($que_chk, ':RT_NAME', $_POST['rt_name']);
+		$r_chk=oci_execute($que_chk);
+		$res = oci_fetch_array($que_chk, OCI_ASSOC);
+		if($res['NUM']==0){
+			$que=oci_parse($conn,"update room_type set RT_NAME=:rt_name where RT_ID=:RT_ID");
+			oci_bind_by_name($que, ':rt_name', $_POST['rt_name']);
+			oci_bind_by_name($que, ':RT_ID', $_POST['RT_ID']);
+			if(!$r=oci_execute($que)){echo "update error";}else{echo "<meta http-equiv='refresh' content='0;url=?room_type'>";}
+		}else{ ?>
+
+			<script type="text/javascript">
+				document.getElementById("war").innerHTML ="พบข้อมูลที่ตรงกันในระบบ";
+				document.getElementById("rt_name").innerHTML=<?=$_POST['rt_name'];?>;
+			</script>
+		<?php }
+	}

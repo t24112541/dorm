@@ -19,11 +19,15 @@
 <?php 
 if(isset($_SESSION['id'])&&$_SESSION['id']!=''&&isset($_SESSION['tel'])&&$_SESSION['tel']!=''){?>
 <?php include "object/right_menu.php"; ?>
-    	<div class="col-sm-3"></div>
-    	<div class="col-sm-9" style="margin-top:50px">
+    	<div class="col-sm-1"></div>
+    	<div class="col-sm-11" style="margin-top:50px">
     		<?php 
     			if(isset($_GET['room_type']) || isset($_GET['rt_edit'])){include "./object/room_type.php";}
-          else if(isset($_GET['mount_student'])){include "./object/mount_student.php";}
+          else if(isset($_GET['building_dorm']) || isset($_GET['b_edit'])){include "./object/building_dorm.php";}
+          else if(isset($_GET['room_dorm']) || isset($_GET['r_edit'])){include "./object/room_dorm.php";}
+          else if(isset($_GET['staff_dorm']) || isset($_GET['s_edit']) || isset($_GET['S_DEL'])){include "./object/staff_dorm.php";}
+          else if(isset($_GET['manager_dorm']) || isset($_GET['mng_edit']) || isset($_GET['S_DEL'])){include "./object/manager_dorm.php";}
+          else if(isset($_GET['user_dorm']) || isset($_GET['u_edit']) || isset($_GET['U_DEL'])){include "./object/user_dorm.php";}
           
           
     		 ?>

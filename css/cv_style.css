@@ -84,6 +84,11 @@ fieldset[disabled] a.cv_btn {
   background-color: #b06821;
   color:#f7f7f7;
 }
+.btn_dan{
+  background-color: #c93d36;
+  color:#f7f7f7;
+  
+}
 .log_view{
 	background-color: #8f8f8f;
 	padding:10px;
@@ -203,4 +208,12 @@ h6 {
 
 .double-nav .breadcrumb-dn {
   color: #fff;
+}
+.cv_link:link, .cv_link:visited {
+  color: #000;
+  text-decoration: none;
+  display: inline-block;
+}
+.cv_link:hover, .cv_link:active {
+  color: #ddd;
 }
