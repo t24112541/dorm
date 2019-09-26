@@ -58,7 +58,7 @@
 		<?php if(isset($_GET['s_edit'])){?>
 			<div class="form-group">
 				<label class="control-label col-sm-3" >ผู้รับเข้าทำงาน:</label>
-				<a class="cv_link" href="?manager_dorm_search=<?php echo $res['MNG_ID']; ?>">
+				<a class="cv_link" href="?mng_edit=<?php echo $res['MNG_ID']; ?>">
 					<div class="col-sm-9">
 						<label class="control-label col-sm-12" align="left"><?php if(isset($_GET['s_edit'])) echo $res['MNG_NAME'];?></label>
 					</div>

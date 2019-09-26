@@ -102,7 +102,8 @@
 					<td align="left">อาคาร</td>
 					<td align="right">ราคา/เดือน</td>
 					<td align="left">ประเภทห้อง</td>
-					
+					<td align="left">เช่า</td>
+					<td align="left">ดู/แก้ไข</td>
 				</tr>
 			</thead>
 			<tbody>
@@ -121,7 +122,11 @@
 						<td align="left"><?=$row['B_NAME'];?></td>
 						<td align="right"><?=$row['R_PRICE'];?></td>
 						<td align="left"><?=$row['RT_NAME'];?></td>
-						
+						<?php if($row['R_STATUS']=='ว่าง'){ ?>
+							<td align="center"><a  href="?hire=<?=$row['R_ID'];?>"><i style="color:#4c9e33" class="fas fa-address-book fa-2x" ></i></a></td>
+						<?php } else{?>
+							<td align="center"></td>
+						<?php }?>
 						<td align="center"><a  href="?r_edit=<?=$row['R_ID'];?>"><i style="color:#b06821" class="fas fa-pen-square fa-2x" ></i></a></td>
 					</tr>   
 				

@@ -1,10 +1,14 @@
 <?php if(isset($_GET['u_edit'])){
-		$que=oci_parse($conn,"SELECT * FROM USER_DORM where U_ID=:u_edit");
+		$que=oci_parse($conn,"SELECT * FROM USER_DORM,USER_DORM_DETAIL where USER_DORM.U_ID=USER_DORM_DETAIL.U_ID AND USER_DORM.U_ID=:u_edit");
 		oci_bind_by_name($que, ':u_edit', $_GET['u_edit']);
 		$r=oci_execute($que);
 		$res=oci_fetch_array($que);
+
+		$que_room=oci_parse($conn,"select * from ROOM_DORM,BUILDING_DORM,ROOM_TYPE where ROOM_DORM.RT_ID=ROOM_TYPE.RT_ID AND ROOM_DORM.B_ID=BUILDING_DORM.B_ID");
+		$r_room=oci_execute($que_room);
+		$res_room=oci_fetch_array($que_room);
 ?>
-<?php } ?>
+
 <div class="col-sm-4" style="margin-top:20px;">
 	<form name="USER_DORM" class="form-horizontal box-content was-validated" method="POST" action="">
 		<!-- <?php if(isset($_GET['u_edit'])){?>
@@ -55,28 +59,87 @@
 			    </label>
 			</div>
 		</div>
-
+		<?php 	if(isset($_GET['u_edit'])){
+					$que_s_id=oci_parse($conn,"select count(MNG_ID) as MNG_ID from MANAGER_DORM where MNG_ID=:ID");
+					oci_bind_by_name($que_s_id,':ID',$res['S_ID']);
+					$r_s_id=oci_execute($que_s_id);
+					$res_s_id=oci_fetch_array($que_s_id);
+					if($res_s_id['MNG_ID']>0){
+						$que_s_id=oci_parse($conn,"select * from MANAGER_DORM where MNG_ID=:ID");
+						oci_bind_by_name($que_s_id,':ID',$res['S_ID']);
+						$r_s_id=oci_execute($que_s_id);
+						$res_s_id=oci_fetch_array($que_s_id);
+						$s_name=$res_s_id['MNG_NAME'];
+						$s_id=$res_s_id['MNG_ID'];
+						$s_link='?mng_edit='.$s_id;
+					}else{
+						$que_s_id=oci_parse($conn,"select count(S_ID) as S_ID from STAFF_DORM where S_ID=:ID");
+						oci_bind_by_name($que_s_id,':ID',$res['S_ID']);
+						$r_s_id=oci_execute($que_s_id);
+						$res_s_id=oci_fetch_array($que_s_id);
+						if($res_s_id['S_ID']>0){
+							$que_s_id=oci_parse($conn,"select * from STAFF_DORM where S_ID=:ID");
+							oci_bind_by_name($que_s_id,':ID',$res['S_ID']);
+							$r_s_id=oci_execute($que_s_id);
+							$res_s_id=oci_fetch_array($que_s_id);
+							$s_name=$res_s_id['S_NAME'];
+							$s_id=$res_s_id['S_ID'];
+							$s_link='?s_edit='.$s_id;
+						}
+					}
+			?>
+			<div class="form-group">
+				<label class="control-label col-sm-3" >ผู้รับเข้า:</label>
+				<a class="cv_link" href="<?php echo $s_link; ?>">
+					<div class="col-sm-9">
+						<label class="control-label col-sm-12" align="left"><?php echo $s_name; ?></label>
+					</div>
+				</a>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-3" >วันที่เข้า:</label>
+				<div class="col-sm-9">
+					<label class="control-label col-sm-12" ><?php if(isset($_GET['u_edit'])) echo $res['UD_DATE'];?></label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-3" >ห้อง:</label>
+				<div class="col-sm-9">
+					<label class="control-label col-sm-12" ><?php if(isset($_GET['u_edit'])){echo $res_room['R_NAME'];}?></label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-3" >ประเภท:</label>
+				<div class="col-sm-9">
+					<label class="control-label col-sm-12" ><?php if(isset($_GET['u_edit'])){echo $res_room['RT_NAME'];}?></label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-3" >อาคาร:</label>
+				<div class="col-sm-9">
+					<label class="control-label col-sm-12" ><?php if(isset($_GET['u_edit'])){echo $res_room['B_NAME'];}?></label>
+				</div>
+			</div>
+		<?php } ?>
 		<div class="form-group">
 			<?php if(isset($_GET['u_edit'])){?>
-			<div class="col-sm-6"><center>
+			<div class="col-sm-12"><center>
 				<button class="btn btn-ok" name="btn_edit"><i class="fas fa-save fa-1x"></i> บันทึกข้อมูล</button> </a>
 			</div>
 			<?php } ?>
-			<div class="<?php if(isset($_GET['u_edit'])){ echo 'col-sm-6';}else{echo 'col-sm-12';}?>" ><center>
-				<button class="btn btn-ok" name="btn_add"><i class="fas fa-plus-square fa-1x"></i> เพิ่มผู้จัดการ</button> </a>
-			</div>
 		</div>
 	</form>
 </div>
+<?php } ?>
 <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-<div class="col-sm-8 " style="margin-top:30px;"><center>
+<div class=" <?php if(isset($_GET['u_edit'])){echo 'col-sm-8';}else{echo 'col-sm-12';}?>" style="margin-top:30px;">
 	<div class="box-content">
 
 <?php 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		$que = oci_parse($conn, "SELECT * FROM USER_DORM,USER_DORM_DETAIL where USER_DORM.U_ID=USER_DORM_DETAIL.U_ID  order by U_NAME asc");
 		$r = oci_execute($que);
-		$que_chk=oci_parse($conn,"select count(U_ID) as NUM ,U_ID from USER_DORM,USER_DORM_DETAIL where USER_DORM.U_ID=USER_DORM_DETAIL.U_ID ");
+		$que_chk=oci_parse($conn,"select count(USER_DORM.U_ID) as NUM from USER_DORM,USER_DORM_DETAIL where USER_DORM.U_ID=USER_DORM_DETAIL.U_ID ");
 		$r_chk=oci_execute($que_chk);
 		$res = oci_fetch_array($que_chk, OCI_ASSOC);
 		?>
@@ -92,7 +155,7 @@
 		<?php
 		if($res['NUM']==0){?>
 			<tr>
-				<td colspan="4">ไม่พบข้อมูล</td>
+				<td colspan="4" align="center">ไม่พบข้อมูล</td>
 			</tr>    
 		<?php }
 		else{
@@ -130,7 +193,7 @@
 			oci_bind_by_name($que, ':U_TEL', $_POST['U_TEL']);
 			oci_bind_by_name($que, ':U_GENDER', $_POST['U_GENDER']);
 			if(!$r=oci_execute($que)){$err=oci_error(); echo "<center style='color:#ac3115;'>".$err['message']."</center>";}else{
-				$que_ud=oci_parse($conn,"insert into USER_DORM_DETAIL (UD_DATE,S_ID,U_ID) values ()");
+				$que_ud=oci_parse($conn,"insert into USER_DORM_DETAIL (UD_DATE,S_ID,U_ID) values (:UD_DATE,:S_ID,:U_ID)");
 				oci_bind_by_name($que_ud, ':UD_DATE', $S_DATE);
 				oci_bind_by_name($que_ud, ':S_ID', $_SESSION['id']);
 				oci_bind_by_name($que_ud, ':U_ID', $_POST['U_ID']);
