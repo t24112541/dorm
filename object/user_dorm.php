@@ -4,11 +4,18 @@
 		$r=oci_execute($que);
 		$res=oci_fetch_array($que);
 
-		$que_room=oci_parse($conn,"select * from ROOM_DORM,BUILDING_DORM,ROOM_TYPE where ROOM_DORM.RT_ID=ROOM_TYPE.RT_ID AND ROOM_DORM.B_ID=BUILDING_DORM.B_ID");
-		$r_room=oci_execute($que_room);
-		$res_room=oci_fetch_array($que_room);
+		$que_chk=oci_parse($conn,"select count(U_ID) as NUM from HIRE_USER_DETAIL where U_ID=:u_edit");
+		oci_bind_by_name($que_chk, ':u_edit', $_GET['u_edit']);
+		$r_chk=oci_execute($que_chk);
+		$res_chk=oci_fetch_array($que_chk);
+		if($res_chk['NUM']>0){
+			$que_room=oci_parse($conn,"select * from ROOM_DORM,BUILDING_DORM,ROOM_TYPE,HIRE_USER_DETAIL,HIRE_USER where ROOM_DORM.RT_ID=ROOM_TYPE.RT_ID AND ROOM_DORM.B_ID=BUILDING_DORM.B_ID AND HIRE_USER.R_ID=ROOM_DORM.R_ID AND HIRE_USER.HU_ID=HIRE_USER_DETAIL.HU_ID AND HIRE_USER_DETAIL.U_ID=:u_edit");
+			oci_bind_by_name($que_room, ':u_edit', $_GET['u_edit']);
+			$r_room=oci_execute($que_room);
+			$res_room=oci_fetch_array($que_room);
+		}
 ?>
-
+<?php } ?>
 <div class="col-sm-4" style="margin-top:20px;">
 	<form name="USER_DORM" class="form-horizontal box-content was-validated" method="POST" action="">
 		<!-- <?php if(isset($_GET['u_edit'])){?>
@@ -102,6 +109,7 @@
 					<label class="control-label col-sm-12" ><?php if(isset($_GET['u_edit'])) echo $res['UD_DATE'];?></label>
 				</div>
 			</div>
+			<?php if($res_chk['NUM']>0){?>
 			<div class="form-group">
 				<label class="control-label col-sm-3" >ห้อง:</label>
 				<div class="col-sm-9">
@@ -120,19 +128,34 @@
 					<label class="control-label col-sm-12" ><?php if(isset($_GET['u_edit'])){echo $res_room['B_NAME'];}?></label>
 				</div>
 			</div>
-		<?php } ?>
+		<?php } }?>
 		<div class="form-group">
 			<?php if(isset($_GET['u_edit'])){?>
+				<div class="col-sm-6"><center>
+					<button class="btn btn-ok" name="btn_edit"><i class="fas fa-save fa-1x"></i> บันทึกข้อมูล</button> 
+				</div>
+			<?php if($res_chk['NUM']>0){?>
+				<div class="col-sm-6"><center>
+					<a href="?r_edit=<?php echo $res_room['R_ID']?>" class="btn btn-default" ><i class="fas fa-concierge-bell fa-1x"></i> ดูห้อง</a> 
+				</div>
+			<?php } else {?>
+				<div class="col-sm-6"><center>
+					<a href="?room_dorm" class="btn btn-default" ><i class="fas fa-concierge-bell fa-1x"></i> ดูห้องทั้งหมด</a> 
+				</div>
+			<?php } } ?>
+		</div>
+		<div class="form-group">
+
 			<div class="col-sm-12"><center>
-				<button class="btn btn-ok" name="btn_edit"><i class="fas fa-save fa-1x"></i> บันทึกข้อมูล</button> </a>
+				<button class="btn btn-ok" name="btn_add"><i class="fas fa-plus-square fa-1x"></i> เพิ่มข้อมูล</button> 
 			</div>
-			<?php } ?>
+
 		</div>
 	</form>
 </div>
-<?php } ?>
+
 <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-<div class=" <?php if(isset($_GET['u_edit'])){echo 'col-sm-8';}else{echo 'col-sm-12';}?>" style="margin-top:30px;">
+<div class=" <?php if(isset($_GET['u_edit'])){echo 'col-sm-8';}else{echo 'col-sm-8';}?>" style="margin-top:30px;">
 	<div class="box-content">
 
 <?php 

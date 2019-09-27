@@ -26,6 +26,7 @@
         <li class="<?php if(isset($_GET['room_dorm'])){echo 'active';}?>"><a href="?room_dorm" >ห้อง</a></li>
         <li class="<?php if(isset($_GET['room_type'])){echo 'active';}?>"><a href="?room_type" >ประเภทห้อง</a></li>
         <li class="<?php if(isset($_GET['HIRE_USER'])){echo 'active';}?>"><a href="?HIRE_USER" >เช่าห้องพัก</a></li>
+        <li class="<?php if(isset($_GET['HIRE_STAFF'])){echo 'active';}?>"><a href="?HIRE_STAFF" >จ้างพนักงาน</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="?get_out!" ><i class="fas fa-sign-out-alt " style="font-size:20px"></i> logout</a></li>

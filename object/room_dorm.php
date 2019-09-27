@@ -26,15 +26,16 @@
     oninput="this.setCustomValidity('')" class="form-control" id="R_PRICE" name="R_PRICE" placeholder="ราคา" value="<?php if(isset($_GET['r_edit'])) echo $res['R_PRICE'];?>">
 			</div>
 		</div>
+		<?php if(isset($_GET['r_edit'])){ ?>
 		<div class="form-group">
 			<label class="control-label col-sm-3" >สถานะห้อง:</label>
 			<div class="col-sm-9">
-				<select required id="R_STATUS" name="R_STATUS" class="form-control" id="sel1">
-					<option value="ว่าง" <?php if(isset($_GET['r_edit'])){if($res['R_STATUS']=="ว่าง")echo "selected  hidden" ;}?>>ว่าง</option>
-					<option value="ไม่ว่าง" <?php if(isset($_GET['r_edit'])){if($res['R_STATUS']=="ไม่ว่าง")echo "selected  hidden" ;}?>>ไม่ว่าง</option>
+				<select required id="R_STATUS" name="R_STATUS" class="form-control" id="sel1" readonly>
+					<option value="<?php echo $res['R_STATUS']?>"><?php echo $res['R_STATUS']?></option>
 				</select>
 			</div>
 		</div>
+		<?php } ?>
 		<div class="form-group">
 			<label class="control-label col-sm-3" >ประเภทห้อง:</label>
 			<div class="col-sm-9">

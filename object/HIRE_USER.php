@@ -60,23 +60,29 @@
 	</form>
 </div>
 <?php }
-if(isset($_POST['btn_hire'])){
+if(isset($_POST['btn_hire']) && $_POST['U_ID']!=""){
 			$S_DATE=date("d/m/Y h:i:sa");
 			$que=oci_parse($conn,"insert into HIRE_USER (S_ID,R_ID) values (:S_ID,:R_ID) RETURNING HU_ID INTO :return_val");
 			oci_bind_by_name($que, ':R_ID', $_POST['R_ID']);
 			oci_bind_by_name($que, ':S_ID', $_SESSION['id']);
-			oci_bind_by_name($que, ":return_val", $val);
+			oci_bind_by_name($que, ":return_val", $val, 18);
 			if(!$r=oci_execute($que)){$err=oci_error(); echo "<center style='color:#ac3115;'>".$err['message']."</center>";}
 			else{
 				// echo $val;
-				$HUD_STATUS="เช่า";
+				$HUD_STATUS="in";
+				$R_STATUS="ไม่ว่าง";
 				$que_ud=oci_parse($conn,"insert into HIRE_USER_DETAIL (HUD_DATE,HUD_STATUS,U_ID,HU_ID) values (:HUD_DATE,:HUD_STATUS,:U_ID,:HU_ID)");
 				oci_bind_by_name($que_ud, ':HUD_DATE', $S_DATE);
 				oci_bind_by_name($que_ud, ':HUD_STATUS', $HUD_STATUS);
 				oci_bind_by_name($que_ud, ':U_ID', $_POST['U_ID']);
 				oci_bind_by_name($que_ud, ':HU_ID', $val);
 				if(!$r=oci_execute($que_ud)){$err=oci_error(); echo "<center style='color:#ac3115;'>".$err['message']."</center>";}else{
-					echo "<meta http-equiv='refresh' content='0;url=?HU_EDIT=".$val."'>";
+					$que_R=oci_parse($conn,"update ROOM_DORM set R_STATUS=:R_STATUS where R_ID=:R_ID");
+					oci_bind_by_name($que_R, ':R_STATUS', $R_STATUS);
+					oci_bind_by_name($que_R, ':R_ID', $_POST['R_ID']);
+					if(!$r=oci_execute($que_R)){$err=oci_error(); echo "<center style='color:#ac3115;'>".$err['message']."</center>";}else{
+						echo "<meta http-equiv='refresh' content='0;url=?HU_EDIT=".$val."'>";
+					}
 				}
 			}
 		
@@ -93,6 +99,7 @@ if(isset($_GET['HU_EDIT'])){
 	<form name="USER_DORM" class="form-horizontal box-content was-validated" method="POST" action="">
 		<input type="hidden" name="HU_ID" value=<?=$_GET['HU_EDIT']?>>
 		<input type="hidden" name="HUD_ID" value=<?=$res['HUD_ID']?>>
+		<input type="hidden" name="R_ID" value=<?=$res['R_ID']?>>
 		<div id="" class="form-group" >
 			<p align="center" class="cv_important" id="war"></p>
 			<label class="control-label col-sm-3" >ห้อง:</label>
@@ -121,7 +128,7 @@ if(isset($_GET['HU_EDIT'])){
 		<div id="" class="form-group" >
 			<label class="control-label col-sm-3" >ผู้เช่า:</label>
 			<div class="col-sm-9">
-				<?php if(isset($_GET['HU_EDIT'])) echo $res['U_NAME']." ".$res['U_LNAME'];?>
+				<a href="?u_edit=<?php echo $res['U_ID']; ?>"><?php if(isset($_GET['HU_EDIT'])) echo $res['U_NAME']." ".$res['U_LNAME'];?></a>
 			</div>
 		</div>
 		<div id="" class="form-group" >
@@ -177,10 +184,12 @@ if(isset($_GET['HU_EDIT'])){
 			<div class="form-group">
 				<label class="control-label col-sm-3" >สถานะห้อง:</label>
 				<div class="col-sm-9">
-					<select required id="HUD_STATUS" name="HUD_STATUS" class="form-control" id="sel1">
-						<option value="เช่า" <?php if(isset($_GET['r_edit'])){if($res['HUD_STATUS']=="เช่า")echo "selected  hidden" ;}?>>เช่า</option>
-						<option value="เลิกเช่า" <?php if(isset($_GET['r_edit'])){if($res['HUD_STATUS']=="เลิกเช่า")echo "selected  hidden" ;}?>>เลิกเช่า</option>
-					</select>
+					<label class="radio-inline">
+			    		<input type="radio" name="HUD_STATUS" value="in" <?php if(isset($_GET['HU_EDIT'])&&$res['HUD_STATUS']=="in"){echo "checked";} ?>>เช่า
+				    </label>
+				    <label class="radio-inline">
+				    	<input type="radio" name="HUD_STATUS" value="out" <?php if(isset($_GET['HU_EDIT'])&&$res['HUD_STATUS']=="out"){echo "checked";} ?>>เลิกเช่า
+				    </label>
 				</div>
 			</div>
 		<?php } ?>
@@ -200,7 +209,7 @@ if(isset($_GET['HU_EDIT'])){
 
 <?php 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		$que = oci_parse($conn, "SELECT * FROM HIRE_USER,HIRE_USER_DETAIL,ROOM_DORM,ROOM_TYPE,BUILDING_DORM,USER_DORM where HIRE_USER.R_ID=ROOM_DORM.R_ID AND ROOM_TYPE.RT_ID=ROOM_DORM.RT_ID AND BUILDING_DORM.B_ID=ROOM_DORM.B_ID AND HIRE_USER_DETAIL.HU_ID=HIRE_USER.HU_ID AND HIRE_USER_DETAIL.U_ID=USER_DORM.U_ID order by HIRE_USER.HU_ID desc");
+		$que = oci_parse($conn, "SELECT * FROM HIRE_USER,HIRE_USER_DETAIL,ROOM_DORM,ROOM_TYPE,BUILDING_DORM,USER_DORM where HIRE_USER.R_ID=ROOM_DORM.R_ID AND ROOM_TYPE.RT_ID=ROOM_DORM.RT_ID AND BUILDING_DORM.B_ID=ROOM_DORM.B_ID AND HIRE_USER_DETAIL.HU_ID=HIRE_USER.HU_ID AND HIRE_USER_DETAIL.U_ID=USER_DORM.U_ID  order by HIRE_USER.HU_ID desc");
 		$r = oci_execute($que);
 		$que_chk=oci_parse($conn,"select count(HIRE_USER.HU_ID) as NUM from HIRE_USER,HIRE_USER_DETAIL,ROOM_DORM,ROOM_TYPE,BUILDING_DORM,USER_DORM where HIRE_USER.R_ID=ROOM_DORM.R_ID AND ROOM_TYPE.RT_ID=ROOM_DORM.RT_ID AND BUILDING_DORM.B_ID=ROOM_DORM.B_ID AND HIRE_USER_DETAIL.HU_ID=HIRE_USER.HU_ID AND HIRE_USER_DETAIL.U_ID=USER_DORM.U_ID");
 		$r_chk=oci_execute($que_chk);
@@ -209,9 +218,11 @@ if(isset($_GET['HU_EDIT'])){
 		<table class="table table-striped">
 			<thead>
 				<tr>
+					<td align="left">สถานะ</td>
+					<td align="left">อาคาร</td>
+					<td align="left">ห้อง</td>
 					<td align="left">ชื่อ</td>
-					<td align="left">นามสกุล</td>
-					<td align="left">เบอรโทร</td>				
+					<td align="left">เบอร์โทร</td>				
 				</tr>
 			</thead>
 			<tbody>
@@ -225,8 +236,11 @@ if(isset($_GET['HU_EDIT'])){
 			while (($row = oci_fetch_array($que, OCI_ASSOC))) {?>
 				
 					<tr>
-						<td align="left"><?=$row['R_ID'];?></td>
-						<td align="left"><?=$row['U_LNAME'];?></td>
+						
+						<td align="left"><?php if($row['HUD_STATUS']=="in"){echo "เช่า";}else{echo "เลิกเช่า";} ?></td>
+						<td align="left"><?=$row['B_NAME'];?></td>
+						<td align="left"><?=$row['R_NAME'];?></td>
+						<td align="left"><?=$row['U_NAME'];?></td>
 						<td align="left"><?=$row['U_TEL'];?></td>
 						<td align="center"><a  href="?HU_EDIT=<?=$row['HU_ID'];?>"><i style="color:#b06821" class="fas fa-book-open fa-2x" ></i></a></td>
 					</tr>   
@@ -246,7 +260,16 @@ if(isset($_GET['HU_EDIT'])){
 			$que=oci_parse($conn,"update HIRE_USER_DETAIL set HUD_STATUS=:HUD_STATUS where HUD_ID=:HUD_ID");
 			oci_bind_by_name($que, ':HUD_ID', $_POST['HUD_ID']);
 			oci_bind_by_name($que, ':HUD_STATUS', $_POST['HUD_STATUS']);
-			if(!$r=oci_execute($que)){echo "update error";}else{echo "";}
+			if(!$r=oci_execute($que)){echo "update error";}else{
+				if($_POST['HUD_STATUS']=="out"){$R_STATUS="ว่าง";}
+				else{$R_STATUS="ไม่ว่าง";}
+				$que_R=oci_parse($conn,"update ROOM_DORM set R_STATUS=:R_STATUS where R_ID=:R_ID");
+				oci_bind_by_name($que_R, ':R_STATUS', $R_STATUS);
+				oci_bind_by_name($que_R, ':R_ID', $_POST['R_ID']);
+				if(!$r=oci_execute($que_R)){$err=oci_error(); echo "<center style='color:#ac3115;'>".$err['message']."</center>";}else{
+					echo "<meta http-equiv='refresh' content='0;url=?HU_EDIT=".$_POST['HU_ID']."'>";
+				}
+			}
 			// 
 		
 	}
@@ -257,7 +280,7 @@ if(isset($_GET['HU_EDIT'])){
 		if(U_ID==""){
 			document.getElementById("war").innerHTML="โปรดเลือกผู้เช่า";
 			return false;
-		}else{document.getElementById("war").innerHTML=U_ID;return true;}
+		}else{return true;}
 		
 	}
 </script>
