@@ -147,10 +147,9 @@
 		oci_bind_by_name($que_chk, ':R_NAME', $_POST['R_NAME']);
 		$r_chk=oci_execute($que_chk);
 		$res = oci_fetch_array($que_chk, OCI_ASSOC);
-			$que=oci_parse($conn,"insert into ROOM_DORM (R_NAME,R_PRICE,R_STATUS,B_ID,RT_ID) values (:R_NAME,:R_PRICE,:R_STATUS,:B_ID,:RT_ID)");
+			$que=oci_parse($conn,"insert into ROOM_DORM (R_NAME,R_PRICE,R_STATUS,B_ID,RT_ID) values (:R_NAME,:R_PRICE,'ว่าง',:B_ID,:RT_ID)");
 			oci_bind_by_name($que, ':R_NAME', $_POST['R_NAME']);
 			oci_bind_by_name($que, ':R_PRICE', $_POST['R_PRICE']);
-			oci_bind_by_name($que, ':R_STATUS', $_POST['R_STATUS']);
 			oci_bind_by_name($que, ':B_ID', $_POST['B_ID']);
 			oci_bind_by_name($que, ':RT_ID', $_POST['RT_ID']);
 			if(!$r=oci_execute($que)){echo "insert error";}else{echo "<meta http-equiv='refresh' content='0;url=?room_dorm'>";}

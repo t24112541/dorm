@@ -166,14 +166,11 @@ if(isset($_GET['HU_EDIT'])){
 						}
 					}
 			?>
-		
 			<div class="form-group">
 				<label class="control-label col-sm-3" >ผู้ดูแล:</label>
-				<a class="cv_link" href="<?php echo $s_link; ?>">
 					<div class="col-sm-9">
-						<label class="control-label col-sm-12" align="left"><?php echo $s_name; ?></label>
+						<a class="" href="<?php echo $s_link; ?>"><?php echo $s_name; ?></a>
 					</div>
-				</a>
 			</div>
 			<div class="form-group">
 				<label class="control-label col-sm-3" >วันที่เข้า:</label>

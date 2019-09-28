@@ -139,7 +139,7 @@ if(isset($_POST['id']) && $_POST['id']!='' && isset($_POST['tel']) && $_POST['te
 	if($num_chk==1){
 		$_SESSION['id']=$_POST['id'];
 		$_SESSION['tel']=$_POST['tel'];
-		echo "<meta http-equiv=\"refresh\" content=\"0;url=?db\">";
+		echo "<meta http-equiv=\"refresh\" content=\"0;url=?room_dorm\">";
 	}else{?>
 		<script type="text/javascript">
 			document.getElementById("war").innerHTML ="โปรดตรวจสอบ รหัสประชาชน หรือ เบอร์โทรศัพท์!";
