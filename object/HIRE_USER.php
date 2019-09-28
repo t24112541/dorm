@@ -201,12 +201,12 @@ if(isset($_GET['HU_EDIT'])){
 </div>
 <?php } ?>
 <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-<div class=" <?php if(isset($_GET['HU_EDIT'])){echo 'col-sm-4';}else{echo 'col-sm-6';}?>" style="margin-top:30px;">
+<div class=" <?php if(isset($_GET['HU_EDIT']) || isset($_GET['hire'])){echo 'col-sm-4';}else{echo 'col-sm-12';}?>" style="margin-top:30px;">
 	<div class="box-content">
 
 <?php 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		$que = oci_parse($conn, "SELECT * FROM HIRE_USER,HIRE_USER_DETAIL,ROOM_DORM,ROOM_TYPE,BUILDING_DORM,USER_DORM where HIRE_USER.R_ID=ROOM_DORM.R_ID AND ROOM_TYPE.RT_ID=ROOM_DORM.RT_ID AND BUILDING_DORM.B_ID=ROOM_DORM.B_ID AND HIRE_USER_DETAIL.HU_ID=HIRE_USER.HU_ID AND HIRE_USER_DETAIL.U_ID=USER_DORM.U_ID  order by HIRE_USER.HU_ID desc");
+		$que = oci_parse($conn, "SELECT * FROM HIRE_USER,HIRE_USER_DETAIL,ROOM_DORM,ROOM_TYPE,BUILDING_DORM,USER_DORM where HIRE_USER.R_ID=ROOM_DORM.R_ID AND ROOM_TYPE.RT_ID=ROOM_DORM.RT_ID AND BUILDING_DORM.B_ID=ROOM_DORM.B_ID AND HIRE_USER_DETAIL.HU_ID=HIRE_USER.HU_ID AND HIRE_USER_DETAIL.U_ID=USER_DORM.U_ID  order by HIRE_USER_DETAIL.HUD_STATUS asc");
 		$r = oci_execute($que);
 		$que_chk=oci_parse($conn,"select count(HIRE_USER.HU_ID) as NUM from HIRE_USER,HIRE_USER_DETAIL,ROOM_DORM,ROOM_TYPE,BUILDING_DORM,USER_DORM where HIRE_USER.R_ID=ROOM_DORM.R_ID AND ROOM_TYPE.RT_ID=ROOM_DORM.RT_ID AND BUILDING_DORM.B_ID=ROOM_DORM.B_ID AND HIRE_USER_DETAIL.HU_ID=HIRE_USER.HU_ID AND HIRE_USER_DETAIL.U_ID=USER_DORM.U_ID");
 		$r_chk=oci_execute($que_chk);

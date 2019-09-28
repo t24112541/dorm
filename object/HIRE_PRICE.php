@@ -13,7 +13,7 @@ $today=date('d-m-Y');
 				<select id="R_ID" name="R_ID" class="form-control">
 					<option value=" " selected >โปรดเลือกห้อง</option>
 					<?php 
-						$que_b = oci_parse($conn, "SELECT * FROM ROOM_DORM,BUILDING_DORM,ROOM_TYPE where ROOM_DORM.RT_ID=ROOM_TYPE.RT_ID AND ROOM_DORM.B_ID=BUILDING_DORM.B_ID");
+						$que_b = oci_parse($conn, "SELECT * FROM ROOM_DORM,BUILDING_DORM,ROOM_TYPE where ROOM_DORM.RT_ID=ROOM_TYPE.RT_ID AND ROOM_DORM.B_ID=BUILDING_DORM.B_ID AND ROOM_DORM.R_STATUS='ไม่ว่าง'");
 						$r_b = oci_execute($que_b);
 						while (($row_b = oci_fetch_array($que_b, OCI_ASSOC))) {?>
 							<option  value="<?php echo $row_b['R_ID'];?>"><?php echo $row_b['B_NAME'].' &nbsp;&nbsp;&nbsp;ห้อง '.$row_b['R_NAME'];?></option>
@@ -114,9 +114,14 @@ $today=date('d-m-Y');
 			</tr>    
 		<?php }
 		else{
-			while (($row = oci_fetch_array($que, OCI_ASSOC))) {?>
+			while (($row = oci_fetch_array($que, OCI_ASSOC))) {
+					$que_col=oci_parse($conn,"select HPD_DATE_PAY from HIRE_PRICE,HIRE_PRICE_DETAIL where HIRE_PRICE.HP_ID=HIRE_PRICE_DETAIL.HP_ID AND HIRE_PRICE.HP_ID=:HP_ID");
+					oci_bind_by_name($que_col, ':HP_ID', $row['HP_ID']);
+					$r_chk=oci_execute($que_col);
+					$res_col = oci_fetch_array($que_col, OCI_ASSOC);
+				?>
 				
-					<tr>
+					<tr style="<?php if($res_col['HPD_DATE_PAY']=="0")echo "background-color:#f3a1a1";?>">
 						<td align="left"><?=$row['HP_OUTOFDATE'];?></td>
 						<td align="left"><?=$row['B_NAME'];?></td>
 						<td align="left"><?=$row['R_NAME'];?></td>
@@ -375,7 +380,7 @@ $today=date('d-m-Y');
 <?php if(isset($_POST['btn_add']) && $_POST['R_ID']!=''){
 			$today=date('d-m-Y');
 			$HP_OUTOFDATE= date('d-m-Y', strtotime($today. ' + '.$_POST['HP_OUTOFDATE'].' days'));
-			echo $HP_OUTOFDATE;
+			// echo $HP_OUTOFDATE;
 			$que=oci_parse($conn,"insert into HIRE_PRICE (HP_ELECTRIC_PRICE,HP_WATER_PRICE,HP_OUTOFDATE,S_ID,R_ID) values (:HP_ELECTRIC_PRICE,:HP_WATER_PRICE,:HP_OUTOFDATE,:S_ID,:R_ID) RETURNING HP_ID INTO :return_val");
 			oci_bind_by_name($que, ':HP_ELECTRIC_PRICE', $_POST['HP_ELECTRIC_PRICE']);
 			oci_bind_by_name($que, ':HP_WATER_PRICE', $_POST['HP_WATER_PRICE']);
@@ -388,7 +393,7 @@ $today=date('d-m-Y');
 				oci_bind_by_name($que_HPD, ':HP_ID', $val);
 				// oci_bind_by_name($que_HPD, ':S_ID', $_SESSION['id']);
 				if(!$r=oci_execute($que_HPD)){echo "insert error";}else{
-					echo "<meta http-equiv='refresh' content='0;url=?staff_dorm'>";
+					echo "<meta http-equiv='refresh' content='0;url=?HP_EDIT=".$val."'>";
 				}
 			}
 	}elseif(isset($_POST['btn_pay'])){

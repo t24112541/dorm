@@ -89,7 +89,7 @@
 
 <?php 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		$que = oci_parse($conn, "SELECT * FROM ROOM_DORM,BUILDING_DORM,ROOM_TYPE where ROOM_DORM.RT_ID=ROOM_TYPE.RT_ID AND ROOM_DORM.B_ID=BUILDING_DORM.B_ID order by R_STATUS asc");
+		$que = oci_parse($conn, "SELECT * FROM ROOM_DORM,BUILDING_DORM,ROOM_TYPE where ROOM_DORM.RT_ID=ROOM_TYPE.RT_ID AND ROOM_DORM.B_ID=BUILDING_DORM.B_ID order by R_STATUS,B_NAME,R_NAME asc");
 		$r = oci_execute($que);
 		$que_chk=oci_parse($conn,"select count(R_ID)as NUM from ROOM_DORM,BUILDING_DORM,ROOM_TYPE where ROOM_DORM.RT_ID=ROOM_TYPE.RT_ID AND ROOM_DORM.B_ID=BUILDING_DORM.B_ID ");
 		$r_chk=oci_execute($que_chk);
@@ -143,16 +143,27 @@
 <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 	<?php
 	if(isset($_POST['btn_add']) && $_POST['R_NAME']!=''){
-		$que_chk=oci_parse($conn,"select count(R_NAME)as NUM from ROOM_DORM where R_NAME=:R_NAME");
-		oci_bind_by_name($que_chk, ':R_NAME', $_POST['R_NAME']);
+		$que_chk=oci_parse($conn,"select count(R_ID)as NUM2 from ROOM_DORM where B_ID=:B_ID");
+		oci_bind_by_name($que_chk, ':B_ID', $_POST['B_ID']);
 		$r_chk=oci_execute($que_chk);
 		$res = oci_fetch_array($que_chk, OCI_ASSOC);
+
+		$que_b=oci_parse($conn,"select B_ROOM_COUNT as NUM1 from BUILDING_DORM where B_ID=:B_ID");
+		oci_bind_by_name($que_b, ':B_ID', $_POST['B_ID']);
+		$r_b=oci_execute($que_b);
+		$res_b = oci_fetch_array($que_b, OCI_ASSOC);
+		if($res['NUM2']<$res_b['NUM1']){
 			$que=oci_parse($conn,"insert into ROOM_DORM (R_NAME,R_PRICE,R_STATUS,B_ID,RT_ID) values (:R_NAME,:R_PRICE,'ว่าง',:B_ID,:RT_ID)");
 			oci_bind_by_name($que, ':R_NAME', $_POST['R_NAME']);
 			oci_bind_by_name($que, ':R_PRICE', $_POST['R_PRICE']);
 			oci_bind_by_name($que, ':B_ID', $_POST['B_ID']);
 			oci_bind_by_name($que, ':RT_ID', $_POST['RT_ID']);
 			if(!$r=oci_execute($que)){echo "insert error";}else{echo "<meta http-equiv='refresh' content='0;url=?room_dorm'>";}
+		}else{?>
+			<script type="text/javascript">
+				document.getElementById("war").innerHTML ="จำวนห้องต่ออาคารเต็มแล้ว";
+			</script>
+		<?php }
 	}elseif(isset($_POST['btn_edit']) && $_POST['R_NAME']!=''){
 		$que_chk=oci_parse($conn,"select count(R_NAME)as NUM from ROOM_DORM where R_NAME=:R_NAME");
 		oci_bind_by_name($que_chk, ':R_NAME', $_POST['R_NAME']);

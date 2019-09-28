@@ -55,7 +55,7 @@
 			    </label>
 			</div>
 		</div>
-
+		<?php if($_SESSION['status']=="MNG"){?>
 		<div class="form-group">
 			<?php if(isset($_GET['mng_edit'])){?>
 			<div class="col-sm-6"><center>
@@ -66,6 +66,7 @@
 				<button class="btn btn-ok" name="btn_add"><i class="fas fa-plus-square fa-1x"></i> เพิ่มผู้จัดการ</button> </a>
 			</div>
 		</div>
+		<?php } ?>
 	</form>
 </div>
 <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->

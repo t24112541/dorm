@@ -9,7 +9,7 @@ if(isset($_GET['HS_EDIT'])){
 <?php } ?>
 <div class="col-sm-6" style="margin-top:20px;">
 	<form name="USER_DORM" class="form-horizontal box-content was-validated" method="POST" action="">
-		<input type="hidden" name="HU_ID" value=<?php if(isset($_GET['HS_EDIT'])){ echo $_GET['HS_EDIT'];}?>>
+		<input type="hidden" name="HS_ID" value=<?php if(isset($_GET['HS_EDIT'])){ echo $_GET['HS_EDIT'];}?>>
 		<div class="form-group">
 			<label class="control-label col-sm-3" >พนักงาน:</label>
 			<div class="col-sm-9">
@@ -69,7 +69,7 @@ if(isset($_GET['HS_EDIT'])){
 		<div class="form-group">
 			<?php if(isset($_GET['HS_EDIT'])){?>
 			<div class="col-sm-12"><center>
-				<button class="btn btn-ok" name="btn_edit"><i class="fas fa-save fa-1x"></i> บันทึกข้อมูล</button> </a>
+				<button class="btn btn_dan" name="btn_edit" onclick="return confirm('ลบจริงหรือไม่?')"><i class="fas fa-trash-alt fa-1x"></i> ลบข้อมูล</button> </a>
 			</div>
 			<?php } ?>
 		</div>

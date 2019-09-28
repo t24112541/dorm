@@ -14,7 +14,7 @@
 			<p align="center" class="cv_important" id="war"></p>
 			<label class="control-label col-sm-3" >รหัสประชาชน:</label>
 			<div class="col-sm-9">
-				<textarea required readonly oninvalid="this.setCustomValidity('กรอกรหัสประชาชน')"
+				<textarea required  oninvalid="this.setCustomValidity('กรอกรหัสประชาชน')" <?php if(isset($_GET['s_edit']))echo "readonly";?>
     oninput="this.setCustomValidity('')" maxlength="13" rows="1" class="form-control" id="S_ID" name="S_ID" placeholder="รหัสประชาชน"><?php if(isset($_GET['s_edit'])) echo $res['S_ID'];?></textarea>
 			</div>
 		</div>
@@ -79,7 +79,8 @@
 					</select>
 				</div>
 			</div>
-		<?php } ?>
+		<?php } 
+		if($_SESSION['status']=="MNG"){?>
 		<div class="form-group">
 			<?php if(isset($_GET['s_edit'])){?>
 			<div class="col-sm-6"><center>
@@ -90,6 +91,7 @@
 				<button  onclick="chk_S_NAME()" class="btn btn-ok" name="btn_add"><i class="fas fa-plus-square fa-1x"></i> เพิ่มพนักงาน</button> </a>
 			</div>
 		</div>
+	<?php }?>
 	</form>
 </div>
 <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->

@@ -130,21 +130,53 @@ if(isset($_SESSION['db_status'])&&$_SESSION['db_status']=="main_db_fail"){
 <?php }
 if(isset($_POST['id']) && $_POST['id']!='' && isset($_POST['tel']) && $_POST['tel']!=''){
 
-	$que=oci_parse($conn,"select * from MANAGER_DORM where MNG_ID=:id and MNG_TEL=:tel");
-	oci_bind_by_name($que, ':id', $_POST['id']);
-	oci_bind_by_name($que, ':tel', $_POST['tel']);
-	$r = oci_execute($que);
-	$num_chk=oci_fetch_all($que, $out);
-
-	if($num_chk==1){
-		$_SESSION['id']=$_POST['id'];
-		$_SESSION['tel']=$_POST['tel'];
+	$que_s_id=oci_parse($conn,"select count(MNG_ID) as MNG_ID from MANAGER_DORM where MNG_ID=:id and MNG_TEL=:tel");
+	oci_bind_by_name($que_s_id, ':id', $_POST['id']);
+	oci_bind_by_name($que_s_id, ':tel', $_POST['tel']);
+	$r_s_id=oci_execute($que_s_id);
+	$res_s_id=oci_fetch_array($que_s_id);
+	if($res_s_id['MNG_ID']>0){
+		$que_s_id=oci_parse($conn,"select * from MANAGER_DORM where MNG_ID=:id and MNG_TEL=:tel");
+		oci_bind_by_name($que_s_id, ':id', $_POST['id']);
+		oci_bind_by_name($que_s_id, ':tel', $_POST['tel']);
+		$r_s_id=oci_execute($que_s_id);
+		$res_s_id=oci_fetch_array($que_s_id);
+		$s_name=$res_s_id['MNG_NAME'].' '.$res_s_id['MNG_LNAME'];
+		$s_id=$res_s_id['MNG_ID'];
+		$tel=$res_s_id['MNG_TEL'];
+		$s_status="MNG";
+		$s_link='?mng_edit='.$s_id;
+		$_SESSION['id']=$s_id;
+		$_SESSION['tel']=$tel;
+		$_SESSION['status']=$s_status;
 		echo "<meta http-equiv=\"refresh\" content=\"0;url=?room_dorm\">";
-	}else{?>
-		<script type="text/javascript">
-			document.getElementById("war").innerHTML ="โปรดตรวจสอบ รหัสประชาชน หรือ เบอร์โทรศัพท์!";
-		</script>
-	<?php }
+	}else{
+		$que_s_id=oci_parse($conn,"select count(S_ID) as S_ID from STAFF_DORM where S_ID=:id and S_TEL=:tel");
+		oci_bind_by_name($que_s_id, ':id', $_POST['id']);
+		oci_bind_by_name($que_s_id, ':tel', $_POST['tel']);
+		$r_s_id=oci_execute($que_s_id);
+		$res_s_id=oci_fetch_array($que_s_id);
+		if($res_s_id['S_ID']>0){
+			$que_s_id=oci_parse($conn,"select * from STAFF_DORM where S_ID=:id and S_TEL=:tel");
+			oci_bind_by_name($que_s_id, ':id', $_POST['id']);
+			oci_bind_by_name($que_s_id, ':tel', $_POST['tel']);
+			$r_s_id=oci_execute($que_s_id);
+			$res_s_id=oci_fetch_array($que_s_id);
+			$s_name=$res_s_id['S_NAME'].' '.$res_s_id['S_LNAME'];
+			$s_id=$res_s_id['S_ID'];
+			$tel=$res_s_id['S_TEL'];
+			$s_status="STAFF";
+			$s_link='?s_edit='.$s_id;
+			$_SESSION['id']=$s_id;
+			$_SESSION['tel']=$tel;
+			$_SESSION['status']=$s_status;
+			echo "<meta http-equiv=\"refresh\" content=\"0;url=?room_dorm\">";
+		}else{?>
+			<script type="text/javascript">
+				document.getElementById("war").innerHTML ="โปรดตรวจสอบ รหัสประชาชน หรือ เบอร์โทรศัพท์!";
+			</script>
+		<?php }
+	}
 
 }
 ?>
