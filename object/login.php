@@ -149,6 +149,7 @@ if(isset($_POST['id']) && $_POST['id']!='' && isset($_POST['tel']) && $_POST['te
 		$_SESSION['id']=$s_id;
 		$_SESSION['tel']=$tel;
 		$_SESSION['status']=$s_status;
+		$_SESSION['name']=$s_name;
 		echo "<meta http-equiv=\"refresh\" content=\"0;url=?room_dorm\">";
 	}else{
 		$que_s_id=oci_parse($conn,"select count(S_ID) as S_ID from STAFF_DORM where S_ID=:id and S_TEL=:tel");
@@ -170,6 +171,7 @@ if(isset($_POST['id']) && $_POST['id']!='' && isset($_POST['tel']) && $_POST['te
 			$_SESSION['id']=$s_id;
 			$_SESSION['tel']=$tel;
 			$_SESSION['status']=$s_status;
+			$_SESSION['name']=$s_name;
 			echo "<meta http-equiv=\"refresh\" content=\"0;url=?room_dorm\">";
 		}else{?>
 			<script type="text/javascript">

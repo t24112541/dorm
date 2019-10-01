@@ -1,5 +1,5 @@
 <?php
-	// error_reporting(E_ERROR | E_PARSE);
+	error_reporting(E_ERROR | E_PARSE);
 	date_default_timezone_set("Asia/Bangkok");
 	$arr = json_decode(file_get_contents('./db/db_main.txt'), true)  or die("Unable to open file!");
 

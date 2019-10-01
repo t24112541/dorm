@@ -43,8 +43,17 @@ if($_SESSION['status']=='MNG'){?>
         </li>
 
       </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="?get_out!" ><i class="fas fa-sign-out-alt " style="font-size:20px"></i> ออกจากระบบ</a></li>
+
+      <ul class="nav navbar-nav navbar-right"><i class="fas fa-user-edit"></i>
+         <li class="dropdown <?php if(isset($_GET['manager_dorm']) || isset($_GET['staff_dorm']) || isset($_GET['HIRE_STAFF']) || isset($_GET['user_dorm'])){echo 'active';}?>">
+          <a class="dropdown-toggle " data-toggle="dropdown" href="#"><i class="fas fa-user"></i> <?php echo $_SESSION['name']?><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="<?php if(isset($_GET['edit_profile'])){echo 'active';}?>"><a href="?edit_profile=<?php echo $_SESSION['id']?>"> <i class="fas fa-user-edit fa-1x"></i> แก้ไขข้อมูล</a></li>
+            <li class="<?php if(isset($_GET['get_out'])){echo 'active';}?>"><a href="?get_out!" ><i class="fas fa-sign-out-alt fa-1x"></i> ออกจากระบบ</a></li>
+          </ul>
+        </li>
+
+        <!-- <li><a href="?get_out!" ><i class="fas fa-sign-out-alt " style="font-size:20px"></i> ออกจากระบบ</a></li> -->
       </ul>
     </div>
   </div>
@@ -87,8 +96,20 @@ elseif($_SESSION['status']=='STAFF'){?>
         </li>
 
       </ul>
+      <ul class="nav navbar-nav navbar-right"><i class="fas fa-user-edit"></i>
+         <li class="dropdown <?php if(isset($_GET['manager_dorm']) || isset($_GET['staff_dorm']) || isset($_GET['HIRE_STAFF']) || isset($_GET['user_dorm'])){echo 'active';}?>">
+          <a class="dropdown-toggle " data-toggle="dropdown" href="#"><i class="fas fa-user"></i> <?php echo $_SESSION['name']?><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="<?php if(isset($_GET['edit_profile'])){echo 'active';}?>"><a href="?edit_profile=<?php echo $_SESSION['id']?>"> <i class="fas fa-user-edit fa-1x"></i> แก้ไขข้อมูล</a></li>
+            <li><a href="?HIRE_STAFF_for_staff" ><i class="fas fa-money-bill-wave-alt " style="font-size:20px"></i> ยืนยันการรับเงิน</a></li>
+            <li class="<?php if(isset($_GET['get_out'])){echo 'active';}?>"><a href="?get_out!" ><i class="fas fa-sign-out-alt fa-1x"></i> ออกจากระบบ</a></li>
+          </ul>
+        </li>
+
+        <!-- <li><a href="?get_out!" ><i class="fas fa-sign-out-alt " style="font-size:20px"></i> ออกจากระบบ</a></li> -->
+      </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="?get_out!" ><i class="fas fa-sign-out-alt " style="font-size:20px"></i> ออกจากระบบ</a></li>
+        
       </ul>
     </div>
   </div>

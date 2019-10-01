@@ -31,7 +31,9 @@ if(isset($_SESSION['id'])&&$_SESSION['id']!=''&&isset($_SESSION['tel'])&&$_SESSI
           else if(isset($_GET['HIRE_USER']) || isset($_GET['hire']) || isset($_GET['HU_EDIT'])){include "./object/HIRE_USER.php";}
           else if(isset($_GET['HIRE_STAFF'])  || isset($_GET['HS_EDIT'])){include "./object/HIRE_STAFF.php";}
           else if(isset($_GET['HIRE_PRICE_ADD']) || isset($_GET['HIRE_PRICE']) || isset($_GET['HP_EDIT'])){include "./object/HIRE_PRICE.php";}
-      
+          else if(isset($_GET['HIRE_STAFF_for_staff']) || isset($_GET['HS_EDIT_for_staff'])){include "./object/HIRE_STAFF_for_staff.php";}
+          else if(isset($_GET['edit_profile'])){include "./object/profile.php";}
+          else{include "./object/room_dorm.php";}
     		 ?>
     	</div>
     <?php }
