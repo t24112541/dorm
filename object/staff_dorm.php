@@ -60,14 +60,14 @@
 				<label class="control-label col-sm-3" >ผู้รับเข้าทำงาน:</label>
 				<a class="cv_link" href="?mng_edit=<?php echo $res['MNG_ID']; ?>">
 					<div class="col-sm-9">
-						<label class="control-label col-sm-12" align="left"><?php if(isset($_GET['s_edit'])) echo $res['MNG_NAME'];?></label>
+						<p style="margin-top:10px"><?php if(isset($_GET['s_edit'])) echo $res['MNG_NAME'];?></p>
 					</div>
 				</a>
 			</div>
 			<div class="form-group">
 				<label class="control-label col-sm-3" >วันที่รับเข้า:</label>
 				<div class="col-sm-9">
-					<label class="control-label col-sm-12" ><?php if(isset($_GET['s_edit'])) echo $res['S_DATE'];?></label>
+					<p style="margin-top:10px"><?php if(isset($_GET['s_edit'])) echo $res['S_DATE'];?></p>
 				</div>
 			</div>
 			<div class="form-group">
@@ -86,10 +86,15 @@
 			<div class="col-sm-6"><center>
 				<button  onclick="chk_S_NAME()" class="btn btn-ok" name="btn_edit"><i class="fas fa-save fa-1x"></i> บันทึกข้อมูล</button> </a>
 			</div>
-			<?php } ?>
-			<div class="<?php if(isset($_GET['s_edit'])){ echo 'col-sm-6';}else{echo 'col-sm-12';}?>" ><center>
-				<button  onclick="chk_S_NAME()" class="btn btn-ok" name="btn_add"><i class="fas fa-plus-square fa-1x"></i> เพิ่มพนักงาน</button> </a>
+			<div class="col-sm-6"><center>
+				<a class="btn " href="?staff_dorm"><i class="fas fa-arrow-circle-left fa-1x"></i> ย้อนกลับ</a> </a>
 			</div>
+			<?php }else{ ?><i class="fas "></i>
+			<div class="<?php if(isset($_GET['s_edit'])){ echo 'col-sm-6';}else{echo 'col-sm-12';}?>" ><center>
+				<button onclick="chk_S_NAME()" class="btn btn-ok" name="btn_add"><i class="fas fa-plus-square fa-1x"></i> เพิ่มพนักงาน</button> </a>
+			</div>
+			<?php } ?>
+			
 		</div>
 	<?php }?>
 	</form>
@@ -158,7 +163,7 @@
 			oci_bind_by_name($que, ':MNG_ID', $_SESSION['id']);
 			oci_bind_by_name($que, ':S_DATE', $S_DATE);
 			// oci_bind_by_name($que, ':S_STATUS', "จ้าง");
-			if(!$r=oci_execute($que)){echo "insert error";}else{echo "<meta http-equiv='refresh' content='0;url=?staff_dorm'>";}
+			if(!$r=oci_execute($que)){echo "insert error";}else{echo "<meta http-equiv='refresh' content='0;url=?s_edit=".$_POST['S_ID']."'>";}
 		}else{ ?>
 			<script type="text/javascript">
 				document.getElementById("war").innerHTML ="พบข้อมูลที่ตรงกันในระบบ";

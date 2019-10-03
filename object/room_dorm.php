@@ -76,11 +76,26 @@
 			<div class="col-sm-6"><center>
 				<button  onclick="chk_R_NAME()" class="btn btn-ok" name="btn_edit"><i class="fas fa-save fa-1x"></i> บันทึกข้อมูล</button> </a>
 			</div>
+			<div class="col-sm-6"><center>
+				<a class="btn " href="?room_dorm"><i class="fas fa-arrow-circle-left fa-1x"></i> ห้อง</a> </a>
+			</div>
+			<?php }else{ ?>
+			<div class="<?php if(isset($_GET['s_edit'])){ echo 'col-sm-6';}else{echo 'col-sm-12';}?>" ><center>
+				<button onclick="chk_S_NAME()" class="btn btn-ok" name="btn_add"><i class="fas fa-plus-square fa-1x"></i> เพิ่มห้อง</button> </a>
+			</div>
 			<?php } ?>
-			<div class="<?php if(isset($_GET['r_edit'])){ echo 'col-sm-6';}else{echo 'col-sm-12';}?>" ><center>
-				<button  onclick="chk_R_NAME()" class="btn btn-ok" name="btn_add"><i class="fas fa-plus-square fa-1x"></i> เพิ่มห้อง</button> </a>
+
+			
+		</div>
+		<?php if(isset($_GET['add_stg'])){?>
+		<div class="form-group" id="noti">
+			<input type="hidden" name="add_stg" value="<?php echo $_GET['add_stg']?>">
+			<div class="alert alert-success alert-dismissible fade in">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				<strong>บันทึกข้อมูลสำเร็จ!</strong>
 			</div>
 		</div>
+		<?php }?>
 	</form>
 </div>
 <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
@@ -139,7 +154,6 @@
 	</div>
 </div>
 
-
 <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 	<?php
 	if(isset($_POST['btn_add']) && $_POST['R_NAME']!=''){
@@ -153,12 +167,26 @@
 		$r_b=oci_execute($que_b);
 		$res_b = oci_fetch_array($que_b, OCI_ASSOC);
 		if($res['NUM2']<$res_b['NUM1']){
-			$que=oci_parse($conn,"insert into ROOM_DORM (R_NAME,R_PRICE,R_STATUS,B_ID,RT_ID) values (:R_NAME,:R_PRICE,'ว่าง',:B_ID,:RT_ID)");
-			oci_bind_by_name($que, ':R_NAME', $_POST['R_NAME']);
-			oci_bind_by_name($que, ':R_PRICE', $_POST['R_PRICE']);
-			oci_bind_by_name($que, ':B_ID', $_POST['B_ID']);
-			oci_bind_by_name($que, ':RT_ID', $_POST['RT_ID']);
-			if(!$r=oci_execute($que)){echo "insert error";}else{echo "<meta http-equiv='refresh' content='0;url=?room_dorm'>";}
+			$que_chk_2=oci_parse($conn,"select count(R_NAME)as N_CHK from ROOM_DORM,BUILDING_DORM where ROOM_DORM.B_ID=BUILDING_DORM.B_ID AND R_NAME=:R_NAME AND ROOM_DORM.B_ID=:B_ID");
+			oci_bind_by_name($que_chk_2, ':R_NAME', $_POST['R_NAME']);
+			oci_bind_by_name($que_chk_2, ':B_ID', $_POST['B_ID']);
+			$r_chk_2=oci_execute($que_chk_2);
+			$res_2 = oci_fetch_array($que_chk_2, OCI_ASSOC);
+			echo $res_2['N_CHK'];
+			if($res_2['N_CHK']<1){
+				$que=oci_parse($conn,"insert into ROOM_DORM (R_NAME,R_PRICE,R_STATUS,B_ID,RT_ID) values (:R_NAME,:R_PRICE,'ว่าง',:B_ID,:RT_ID) RETURNING R_ID INTO :return_val");
+				oci_bind_by_name($que, ':R_NAME', $_POST['R_NAME']);
+				oci_bind_by_name($que, ':R_PRICE', $_POST['R_PRICE']);
+				oci_bind_by_name($que, ':B_ID', $_POST['B_ID']);
+				oci_bind_by_name($que, ':RT_ID', $_POST['RT_ID']);
+				oci_bind_by_name($que, ":return_val", $val, 18);
+				if(!$r=oci_execute($que)){echo "insert error";}else{echo "<meta http-equiv='refresh' content='0;url=?r_edit=".$val."'>";}
+			}else{?>
+				<script type="text/javascript">
+					document.getElementById("war").innerHTML ="มีชื่อห้องดังกว่าวในอาคารนี้แล้ว";
+				</script>
+			<?php }
+			
 		}else{?>
 			<script type="text/javascript">
 				document.getElementById("war").innerHTML ="จำวนห้องต่ออาคารเต็มแล้ว";

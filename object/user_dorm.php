@@ -25,7 +25,7 @@
 			<p align="center" class="cv_important" id="war"></p>
 			<label class="control-label col-sm-3" >รหัสประชาชน:</label>
 			<div class="col-sm-9">
-				<textarea required  oninvalid="this.setCustomValidity('กรอกรหัสประชาชน')"
+				<textarea required  <?php if(isset($_GET['u_edit'])) echo "readonly";?> oninvalid="this.setCustomValidity('กรอกรหัสประชาชน')"
     oninput="this.setCustomValidity('')" maxlength="13" rows="1" class="form-control" id="U_ID" name="U_ID" placeholder="รหัสประชาชน"><?php if(isset($_GET['u_edit'])) echo $res['U_ID'];?></textarea>
 			</div>
 		</div>
@@ -99,33 +99,33 @@
 				<label class="control-label col-sm-3" >ผู้รับเข้า:</label>
 				<a class="cv_link" href="<?php echo $s_link; ?>">
 					<div class="col-sm-9">
-						<label class="control-label col-sm-12" align="left"><?php echo $s_name; ?></label>
+						<p style="margin-top:5px;"><?php echo $s_name; ?></p>
 					</div>
 				</a>
 			</div>
 			<div class="form-group">
 				<label class="control-label col-sm-3" >วันที่เข้า:</label>
 				<div class="col-sm-9">
-					<label class="control-label col-sm-12" ><?php if(isset($_GET['u_edit'])) echo $res['UD_DATE'];?></label>
+					<p style="margin-top:5px;"><?php if(isset($_GET['u_edit'])) echo $res['UD_DATE'];?></p>
 				</div>
 			</div>
 			<?php if($res_chk['NUM']>0){?>
 			<div class="form-group">
 				<label class="control-label col-sm-3" >ห้อง:</label>
 				<div class="col-sm-9">
-					<label class="control-label col-sm-12" ><?php if(isset($_GET['u_edit'])){echo $res_room['R_NAME'];}?></label>
+					<p style="margin-top:5px;"><?php if(isset($_GET['u_edit'])){echo $res_room['R_NAME'];}?></p>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="control-label col-sm-3" >ประเภท:</label>
 				<div class="col-sm-9">
-					<label class="control-label col-sm-12" ><?php if(isset($_GET['u_edit'])){echo $res_room['RT_NAME'];}?></label>
+					<p style="margin-top:5px;"><?php if(isset($_GET['u_edit'])){echo $res_room['RT_NAME'];}?></p>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="control-label col-sm-3" >อาคาร:</label>
 				<div class="col-sm-9">
-					<label class="control-label col-sm-12" ><?php if(isset($_GET['u_edit'])){echo $res_room['B_NAME'];}?></label>
+					<p style="margin-top:5px;"><?php if(isset($_GET['u_edit'])){echo $res_room['B_NAME'];}?></p>
 				</div>
 			</div>
 		<?php } }?>
@@ -142,15 +142,25 @@
 				<div class="col-sm-6"><center>
 					<a href="?room_dorm" class="btn btn-default" ><i class="fas fa-concierge-bell fa-1x"></i> ดูห้องทั้งหมด</a> 
 				</div>
-			<?php } } ?>
-		</div>
-		<div class="form-group">
-
-			<div class="col-sm-12"><center>
-				<button class="btn btn-ok" name="btn_add"><i class="fas fa-plus-square fa-1x"></i> เพิ่มข้อมูล</button> 
+			<?php } ?>
+			<div class="col-sm-6">
+				<a class="btn " style="margin-left:70%;margin-top:20px" href="?user_dorm"><i class="fas fa-arrow-circle-left fa-1x"></i> ห้อง</a> </a>
 			</div>
-
+			<?php  } else{ ?>
+			<div class="<?php if(isset($_GET['mng_edit'])){ echo 'col-sm-6';}else{echo 'col-sm-12';}?>" ><center>
+				<button class="btn btn-ok" name="btn_add"><i class="fas fa-plus-square fa-1x"></i> เพิ่มข้อมูล</button> </a>
+			</div>
+			<?php } ?>
 		</div>
+		<?php if(isset($_GET['add_stg'])){?>
+		<div class="form-group" id="noti">
+			<input type="hidden" name="add_stg" value="<?php echo $_GET['add_stg']?>">
+			<div class="alert alert-success alert-dismissible fade in">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				<strong>บันทึกข้อมูลสำเร็จ!</strong>
+			</div>
+		</div>
+		<?php }?>
 	</form>
 </div>
 

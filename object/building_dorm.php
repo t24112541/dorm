@@ -41,6 +41,15 @@
 				<button class="btn btn-ok" name="btn_add"><i class="fas fa-plus-square fa-1x"></i> เพิ่มอาคาร</button> </a>
 			</div>
 		</div>
+		<?php if(isset($_GET['add_stg'])){?>
+		<div class="form-group" id="noti">
+			<input type="hidden" name="add_stg" value="<?php echo $_GET['add_stg']?>">
+			<div class="alert alert-success alert-dismissible fade in">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				<strong>บันทึกข้อมูลสำเร็จ!</strong>
+			</div>
+		</div>
+		<?php }?>
 	</form>
 </div>
 <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
@@ -109,7 +118,7 @@
 			oci_bind_by_name($que, ':B_NAME', $_POST['B_NAME']);
 			oci_bind_by_name($que, ':B_LOCATION', $_POST['B_LOCATION']);
 			oci_bind_by_name($que, ':B_ROOM_COUNT', $_POST['B_ROOM_COUNT']);
-			if(!$r=oci_execute($que)){echo "insert error";}else{echo "<meta http-equiv='refresh' content='0;url=?building_dorm'>";}
+			if(!$r=oci_execute($que)){echo "insert error";}else{echo "<meta http-equiv='refresh' content='0;url=?building_dorm&add_stg'>";}
 		}else{ ?>
 			<script type="text/javascript">
 				document.getElementById("war").innerHTML ="พบข้อมูลที่ตรงกันในระบบ";

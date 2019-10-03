@@ -28,7 +28,7 @@ if(isset($_SESSION['id'])&&$_SESSION['id']!=''&&isset($_SESSION['tel'])&&$_SESSI
           else if(isset($_GET['staff_dorm']) || isset($_GET['s_edit']) || isset($_GET['S_DEL'])){include "./object/staff_dorm.php";}
           else if(isset($_GET['manager_dorm']) || isset($_GET['mng_edit']) || isset($_GET['S_DEL'])){include "./object/manager_dorm.php";}
           else if(isset($_GET['user_dorm']) || isset($_GET['u_edit']) || isset($_GET['U_DEL'])){include "./object/user_dorm.php";}
-          else if(isset($_GET['HIRE_USER']) || isset($_GET['hire']) || isset($_GET['HU_EDIT'])){include "./object/HIRE_USER.php";}
+          else if(isset($_GET['HIRE_USER']) || isset($_GET['hire']) || isset($_GET['HU_EDIT']) || isset($_GET['txt_search'])){include "./object/HIRE_USER.php";}
           else if(isset($_GET['HIRE_STAFF'])  || isset($_GET['HS_EDIT'])){include "./object/HIRE_STAFF.php";}
           else if(isset($_GET['HIRE_PRICE_ADD']) || isset($_GET['HIRE_PRICE']) || isset($_GET['HP_EDIT'])){include "./object/HIRE_PRICE.php";}
           else if(isset($_GET['HIRE_STAFF_for_staff']) || isset($_GET['HS_EDIT_for_staff'])){include "./object/HIRE_STAFF_for_staff.php";}

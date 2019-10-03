@@ -175,7 +175,7 @@ if(isset($_GET['HU_EDIT'])){
 			<div class="form-group">
 				<label class="control-label col-sm-3" >วันที่เข้า:</label>
 				<div class="col-sm-9">
-					<label class="control-label col-sm-12" ><?php if(isset($_GET['HU_EDIT'])) echo $res['HUD_DATE'];?></label>
+					<p style="margin-top:5px"><?php if(isset($_GET['HU_EDIT'])) echo $res['HUD_DATE'];?></p>
 				</div>
 			</div>
 			<div class="form-group">
@@ -197,16 +197,45 @@ if(isset($_GET['HU_EDIT'])){
 			</div>
 			<?php } ?>
 		</div>
+		<?php if(isset($_GET['add_stg'])){?>
+		<div class="form-group" id="noti">
+			<input type="hidden" name="add_stg" value="<?php echo $_GET['add_stg']?>">
+			<div class="alert alert-success alert-dismissible fade in">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				<strong>บันทึกข้อมูลสำเร็จ!</strong>
+			</div>
+		</div>
+		<?php }?>
 	</form>
 </div>
 <?php } ?>
 <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-<div class=" <?php if(isset($_GET['HU_EDIT']) || isset($_GET['hire'])){echo 'col-sm-4';}else{echo 'col-sm-12';}?>" style="margin-top:30px;">
+<div class=" <?php if(isset($_GET['HU_EDIT']) || isset($_GET['hire'])){echo 'col-sm-5';}else{echo 'col-sm-12';}?>" style="margin-top:30px;">
 	<div class="box-content">
+		<form method="GET">
+			<div class="input-group">
+				    <input type="text" class="form-control" name="txt_search" placeholder="หาชื่อห้องสิไอเวร">
+				    <div class="input-group-btn">
+				      <button class="btn btn-default" type="submit" name="btn_search">
+				        <i class="glyphicon glyphicon-search" style="padding:3px"></i>
+				      </button>
+				    </div>
+			</div>
+		</form>
+
 
 <?php 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		$que = oci_parse($conn, "SELECT * FROM HIRE_USER,HIRE_USER_DETAIL,ROOM_DORM,ROOM_TYPE,BUILDING_DORM,USER_DORM where HIRE_USER.R_ID=ROOM_DORM.R_ID AND ROOM_TYPE.RT_ID=ROOM_DORM.RT_ID AND BUILDING_DORM.B_ID=ROOM_DORM.B_ID AND HIRE_USER_DETAIL.HU_ID=HIRE_USER.HU_ID AND HIRE_USER_DETAIL.U_ID=USER_DORM.U_ID  order by HIRE_USER_DETAIL.HUD_STATUS asc");
+		if(isset($_GET['btn_search']) && $_GET['txt_search']!=" "){
+			$que = oci_parse($conn,"SELECT * FROM HIRE_USER,HIRE_USER_DETAIL,ROOM_DORM,ROOM_TYPE,BUILDING_DORM,USER_DORM where HIRE_USER.R_ID=ROOM_DORM.R_ID AND ROOM_TYPE.RT_ID=ROOM_DORM.RT_ID AND BUILDING_DORM.B_ID=ROOM_DORM.B_ID AND HIRE_USER_DETAIL.HU_ID=HIRE_USER.HU_ID AND HIRE_USER_DETAIL.U_ID=USER_DORM.U_ID AND  ROOM_DORM.R_NAME LIKE '%".$_GET['txt_search']."%' order by HIRE_USER_DETAIL.HUD_STATUS asc");
+			oci_bind_by_name($que, ':txt_search', $_GET['txt_search']);// BUILDING_DORM.B_NAME LIKE '%".$_GET['txt_search']."%' OR
+			// echo "1";
+		}else{
+			$que=oci_parse($conn,"SELECT * FROM HIRE_USER,HIRE_USER_DETAIL,ROOM_DORM,ROOM_TYPE,BUILDING_DORM,USER_DORM where HIRE_USER.R_ID=ROOM_DORM.R_ID AND ROOM_TYPE.RT_ID=ROOM_DORM.RT_ID AND BUILDING_DORM.B_ID=ROOM_DORM.B_ID AND HIRE_USER_DETAIL.HU_ID=HIRE_USER.HU_ID AND HIRE_USER_DETAIL.U_ID=USER_DORM.U_ID order by HIRE_USER_DETAIL.HUD_STATUS asc");
+			// echo "2";
+		}
+		
+		
 		$r = oci_execute($que);
 		$que_chk=oci_parse($conn,"select count(HIRE_USER.HU_ID) as NUM from HIRE_USER,HIRE_USER_DETAIL,ROOM_DORM,ROOM_TYPE,BUILDING_DORM,USER_DORM where HIRE_USER.R_ID=ROOM_DORM.R_ID AND ROOM_TYPE.RT_ID=ROOM_DORM.RT_ID AND BUILDING_DORM.B_ID=ROOM_DORM.B_ID AND HIRE_USER_DETAIL.HU_ID=HIRE_USER.HU_ID AND HIRE_USER_DETAIL.U_ID=USER_DORM.U_ID");
 		$r_chk=oci_execute($que_chk);

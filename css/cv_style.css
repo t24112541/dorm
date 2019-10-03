@@ -89,6 +89,11 @@ fieldset[disabled] a.cv_btn {
   color:#f7f7f7;
   
 }
+.btn_def{
+  background-color: #c7c7c7;
+  color:#f7f7f7;
+  
+}
 .log_view{
 	background-color: #8f8f8f;
 	padding:10px;

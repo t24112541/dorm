@@ -14,7 +14,7 @@
 			<p align="center" class="cv_important" id="war"></p>
 			<label class="control-label col-sm-3" >รหัสประชาชน:</label>
 			<div class="col-sm-9">
-				<textarea required readonly  oninvalid="this.setCustomValidity('กรอกรหัสประชาชน')"
+				<textarea required <?php if(isset($_GET['mng_edit'])) echo "readonly";?>  oninvalid="this.setCustomValidity('กรอกรหัสประชาชน')"
     oninput="this.setCustomValidity('')" maxlength="13" rows="1" class="form-control" id="MNG_ID" name="MNG_ID" placeholder="รหัสประชาชน"><?php if(isset($_GET['mng_edit'])) echo $res['MNG_ID'];?></textarea>
 			</div>
 		</div>
@@ -61,12 +61,25 @@
 			<div class="col-sm-6"><center>
 				<button class="btn btn-ok" name="btn_edit"><i class="fas fa-save fa-1x"></i> บันทึกข้อมูล</button> </a>
 			</div>
-			<?php } ?>
+			<div class="col-sm-6"><center>
+				<a class="btn " href="?manager_dorm"><i class="fas fa-arrow-circle-left fa-1x"></i> ย้อนกลับ</a> </a>
+			</div>
+			<?php }else{ ?><i class="fas "></i>
 			<div class="<?php if(isset($_GET['mng_edit'])){ echo 'col-sm-6';}else{echo 'col-sm-12';}?>" ><center>
 				<button class="btn btn-ok" name="btn_add"><i class="fas fa-plus-square fa-1x"></i> เพิ่มผู้จัดการ</button> </a>
 			</div>
+			<?php } ?>
 		</div>
 		<?php } ?>
+		<?php if(isset($_GET['add_stg'])){?>
+		<div class="form-group" id="noti">
+			<input type="hidden" name="add_stg" value="<?php echo $_GET['add_stg']?>">
+			<div class="alert alert-success alert-dismissible fade in">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				<strong>บันทึกข้อมูลสำเร็จ!</strong>
+			</div>
+		</div>
+		<?php }?>
 	</form>
 </div>
 <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->

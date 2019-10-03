@@ -50,34 +50,37 @@ if(isset($_GET['HS_EDIT'])){
 		<div class="form-group">
 			<label class="control-label col-sm-3" >สถานะ:</label>
 				<div class="col-sm-9">
-					<label class="col-sm-12" align="left"><?php echo $res['HS_STATUS']; ?></label>
+					<label style="margin-top:5px" class="col-sm-12" align="left"><?php echo $res['HS_STATUS']; ?></label>
 				</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-sm-3" >วันที่ทำเรื่องจ่าย:</label>
 				<div class="col-sm-9">
-					<label class="col-sm-12" align="left"><?php echo $res['HS_DATE_PAY']; ?></label>
+					<label style="margin-top:5px" class="col-sm-12" align="left"><?php echo $res['HS_DATE_PAY']; ?></label>
 				</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-sm-3" >วันที่ทำเรื่องรับ:</label>
 				<div class="col-sm-9">
-					<label class="col-sm-12" align="left"><?php echo $res['HS_DATE_RECEIVE']; ?></label>
+					<label style="margin-top:5px" class="col-sm-12" align="left"><?php echo $res['HS_DATE_RECEIVE']; ?></label>
 				</div>
 		</div>
 		<?php }?>
 		<div class="form-group">
 			<?php if(isset($_GET['HS_EDIT'])){?>
-			<div class="col-sm-12"><center>
+			<div class="col-sm-6"><center>
 				<button class="btn btn_dan" name="btn_edit" onclick="return confirm('ลบจริงหรือไม่?')"><i class="fas fa-trash-alt fa-1x"></i> ลบข้อมูล</button> </a>
+			</div>
+			<div class="col-sm-6"><center>
+				<a class="btn " href="?HIRE_STAFF"><i class="fas fa-arrow-circle-left fa-1x"></i> ย้อนกลับ</a> </a>
+			</div>
+			<?php }else{ ?><i class="fas "></i>
+			<div class="<?php if(isset($_GET['mng_edit'])){ echo 'col-sm-6';}else{echo 'col-sm-12';}?>" ><center>
+				<button class="btn btn-ok" name="btn_add"><i class="fas fa-plus-square fa-1x"></i> เพิ่มข้อมูล</button> </a>
 			</div>
 			<?php } ?>
 		</div>
-		<div class="form-group">
-			<div class="col-sm-12"><center>
-				<button  onclick="" class="btn btn-ok" name="btn_add"><i class="fas fa-plus-square fa-1x"></i> เพิ่มข้อมูล</button> </a>
-			</div>
-		</div>
+
 	</form>
 </div>
 <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
@@ -111,7 +114,7 @@ if(isset($_GET['HS_EDIT'])){
 		else{
 			while (($row = oci_fetch_array($que, OCI_ASSOC))) {?>
 				
-					<tr>
+					<tr <?php if($row['HS_DATE_RECEIVE']!=" "){echo "style='background-color:#abd19f'";}?>>
 						<td align="left"><?=$row['HS_DATE_PAY'];?></td>
 						<td align="left"><?=$row['HS_DATE_RECEIVE'];?></td>
 						<td align="left"><?=$row['S_NAME'];?></td>
