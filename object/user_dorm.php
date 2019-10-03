@@ -17,10 +17,24 @@
 ?>
 <?php } ?>
 <div class="col-sm-4" style="margin-top:20px;">
-	<form name="USER_DORM" class="form-horizontal box-content was-validated" method="POST" action="">
+	<form name="USER_DORM" class="form-horizontal box-content was-validated" method="POST" action="" enctype="multipart/form-data">
 		<!-- <?php if(isset($_GET['u_edit'])){?>
 			<a href="?S_DEL=<?php echo $res['U_ID'] ?>" style="margin-left:90%" class="btn btn_dan"><i class="fas fa-trash-alt"></i></a>
 		<?php } ?> -->
+		<div id="" class="form-group" >
+			<?php if(isset($_GET['u_edit'])){?>
+				<div class="col-sm-12">
+					<center><img src="<?php echo $res['U_IMG'];?>" style="width:40%">
+						<input type="hidden" name="old_U_IMG" value="<?php echo $res['U_IMG'];?>">
+				</div> 
+			<?php }?>
+			<div class="col-sm-12">
+				<center>เลือกรูป</center>
+			</div>
+			<div class="col-sm-12">
+				<center><input type="file" placeholder="เลือกรูป" name="U_IMG" class="img-responsive"></center>
+			</div>
+		</div>
 		<div id="" class="form-group" >
 			<p align="center" class="cv_important" id="war"></p>
 			<label class="control-label col-sm-3" >รหัสประชาชน:</label>
@@ -219,40 +233,62 @@
 		$res = oci_fetch_array($que_chk, OCI_ASSOC);
 		if($res['NUM']==0){
 			$S_DATE=date("d/m/Y h:i:sa");
-			$que=oci_parse($conn,"insert into USER_DORM (U_ID,U_NAME,U_LNAME,U_TEL,U_GENDER) values (:U_ID,:U_NAME,:U_LNAME,:U_TEL,:U_GENDER)");
-			oci_bind_by_name($que, ':U_ID', $_POST['U_ID']);
-			oci_bind_by_name($que, ':U_NAME', $_POST['U_NAME']);
-			oci_bind_by_name($que, ':U_LNAME', $_POST['U_LNAME']);
-			oci_bind_by_name($que, ':U_TEL', $_POST['U_TEL']);
-			oci_bind_by_name($que, ':U_GENDER', $_POST['U_GENDER']);
-			if(!$r=oci_execute($que)){$err=oci_error(); echo "<center style='color:#ac3115;'>".$err['message']."</center>";}else{
-				$que_ud=oci_parse($conn,"insert into USER_DORM_DETAIL (UD_DATE,S_ID,U_ID) values (:UD_DATE,:S_ID,:U_ID)");
-				oci_bind_by_name($que_ud, ':UD_DATE', $S_DATE);
-				oci_bind_by_name($que_ud, ':S_ID', $_SESSION['id']);
-				oci_bind_by_name($que_ud, ':U_ID', $_POST['U_ID']);
-				if(!$r=oci_execute($que_ud)){$err=oci_error(); echo "<center style='color:#ac3115;'>".$err['message']."</center>";}else{
-					echo "<meta http-equiv='refresh' content='0;url=?u_edit=".$_POST['U_ID']."'>";
-				}
+			if(isset($_FILES['U_IMG']) && $_FILES['name']!=" "){
+				$target_path = "./img/user/";  
+				$target_path = $target_path.basename( $_FILES['U_IMG']['name']);   
+				move_uploaded_file($_FILES['U_IMG']['tmp_name'], $target_path);
+				echo "1";
+			}else{echo "2";
+				$target_path="./img/user/user.PNG";;
 			}
+						 
+			    $que=oci_parse($conn,"insert into USER_DORM (U_ID,U_NAME,U_LNAME,U_TEL,U_GENDER,U_IMG) values (:U_ID,:U_NAME,:U_LNAME,:U_TEL,:U_GENDER,:U_IMG)");
+				oci_bind_by_name($que, ':U_ID', $_POST['U_ID']);
+				oci_bind_by_name($que, ':U_NAME', $_POST['U_NAME']);
+				oci_bind_by_name($que, ':U_LNAME', $_POST['U_LNAME']);
+				oci_bind_by_name($que, ':U_TEL', $_POST['U_TEL']);
+				oci_bind_by_name($que, ':U_GENDER', $_POST['U_GENDER']);
+				oci_bind_by_name($que, ':U_IMG', $target_path);
+				if(!$r=oci_execute($que)){$err=oci_error(); echo "<center style='color:#ac3115;'>".$err['message']."</center>";}else{
+					$que_ud=oci_parse($conn,"insert into USER_DORM_DETAIL (UD_DATE,S_ID,U_ID) values (:UD_DATE,:S_ID,:U_ID)");
+					oci_bind_by_name($que_ud, ':UD_DATE', $S_DATE);
+					oci_bind_by_name($que_ud, ':S_ID', $_SESSION['id']);
+					oci_bind_by_name($que_ud, ':U_ID', $_POST['U_ID']);
+					if(!$r=oci_execute($que_ud)){$err=oci_error(); echo "<center style='color:#ac3115;'>".$err['message']."</center>";}else{
+						echo "<meta http-equiv='refresh' content='0;url=?u_edit=".$_POST['U_ID']."'>";
+					}
+				}			
 		}else{ ?>
 			<script type="text/javascript">
 				document.getElementById("war").innerHTML ="พบข้อมูลที่ตรงกันในระบบ";
 			</script>
 		<?php }
 	}elseif(isset($_POST['btn_edit']) && $_POST['U_ID']!=''){
+		
+			
+			if(isset($_FILES['U_IMG']) && $_FILES['name']!=" "){
+				$target_path = "./img/user/";  
+				$target_path = $target_path.basename( $_FILES['U_IMG']['name']);   
+				move_uploaded_file($_FILES['U_IMG']['tmp_name'], $target_path);
+				echo "1";
+			}else{echo "2";
+				$target_path=$_POST['old_U_IMG'];
+			}
+
 		$que_chk=oci_parse($conn,"select count(U_ID)as NUM from USER_DORM where U_ID=:U_ID");
 		oci_bind_by_name($que_chk, ':U_ID', $_POST['U_ID']);
 		$r_chk=oci_execute($que_chk);
 		$res = oci_fetch_array($que_chk, OCI_ASSOC);
 		$S_DATE=date("Y/m/d h:i:sa");
-			$que=oci_parse($conn,"update USER_DORM set U_NAME=:U_NAME,U_LNAME=:U_LNAME,U_TEL=:U_TEL,U_GENDER=:U_GENDER where U_ID=:U_ID");
+			$que=oci_parse($conn,"update USER_DORM set U_IMG=:U_IMG,U_NAME=:U_NAME,U_LNAME=:U_LNAME,U_TEL=:U_TEL,U_GENDER=:U_GENDER where U_ID=:U_ID");
 			oci_bind_by_name($que, ':U_ID', $_POST['U_ID']);
 			oci_bind_by_name($que, ':U_NAME', $_POST['U_NAME']);
 			oci_bind_by_name($que, ':U_LNAME', $_POST['U_LNAME']);
 			oci_bind_by_name($que, ':U_TEL', $_POST['U_TEL']);
 			oci_bind_by_name($que, ':U_GENDER', $_POST['U_GENDER']);
+			oci_bind_by_name($que, ':U_IMG', $target_path);
 			if(!$r=oci_execute($que)){echo "update error";}else{echo "<meta http-equiv='refresh' content='0;url=?u_edit=".$_POST['U_ID']."'>";}
-			// 
+			
 		
 	}elseif(isset($_GET['S_DEL'])){}
 ?>
