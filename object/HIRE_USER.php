@@ -228,7 +228,7 @@ if(isset($_GET['HU_EDIT'])){
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		if(isset($_GET['btn_search']) && $_GET['txt_search']!=" "){
 			$que = oci_parse($conn,"SELECT * FROM HIRE_USER,HIRE_USER_DETAIL,ROOM_DORM,ROOM_TYPE,BUILDING_DORM,USER_DORM where HIRE_USER.R_ID=ROOM_DORM.R_ID AND ROOM_TYPE.RT_ID=ROOM_DORM.RT_ID AND BUILDING_DORM.B_ID=ROOM_DORM.B_ID AND HIRE_USER_DETAIL.HU_ID=HIRE_USER.HU_ID AND HIRE_USER_DETAIL.U_ID=USER_DORM.U_ID AND  ROOM_DORM.R_NAME LIKE '%".$_GET['txt_search']."%' order by HIRE_USER_DETAIL.HUD_STATUS asc");
-			oci_bind_by_name($que, ':txt_search', $_GET['txt_search']);// BUILDING_DORM.B_NAME LIKE '%".$_GET['txt_search']."%' OR
+			// oci_bind_by_name($que, ':txt_search', $_GET['txt_search']);// BUILDING_DORM.B_NAME LIKE '%".$_GET['txt_search']."%' OR
 			// echo "1";
 		}else{
 			$que=oci_parse($conn,"SELECT * FROM HIRE_USER,HIRE_USER_DETAIL,ROOM_DORM,ROOM_TYPE,BUILDING_DORM,USER_DORM where HIRE_USER.R_ID=ROOM_DORM.R_ID AND ROOM_TYPE.RT_ID=ROOM_DORM.RT_ID AND BUILDING_DORM.B_ID=ROOM_DORM.B_ID AND HIRE_USER_DETAIL.HU_ID=HIRE_USER.HU_ID AND HIRE_USER_DETAIL.U_ID=USER_DORM.U_ID order by HIRE_USER_DETAIL.HUD_STATUS asc");

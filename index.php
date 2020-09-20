@@ -33,6 +33,14 @@ if(isset($_SESSION['id'])&&$_SESSION['id']!=''&&isset($_SESSION['tel'])&&$_SESSI
           else if(isset($_GET['HIRE_PRICE_ADD']) || isset($_GET['HIRE_PRICE']) || isset($_GET['HP_EDIT'])){include "./object/HIRE_PRICE.php";}
           else if(isset($_GET['HIRE_STAFF_for_staff']) || isset($_GET['HS_EDIT_for_staff'])){include "./object/HIRE_STAFF_for_staff.php";}
           else if(isset($_GET['edit_profile'])){include "./object/profile.php";}
+          else if(isset($_GET['fix_dorm'])){include "./object/fix_dorm.php";}
+          else if(isset($_GET['fix_dorm_edit'])){include "./object/fix_dorm_edit.php";}
+          elseif(isset($_GET['del_fix_dorm'])){
+            $que=oci_parse($conn,"delete from $s_owner.FIX_ROOM where F_ID=".$_GET['del_fix_dorm']."");
+            if(!$r=oci_execute($que)){echo "delete error";echo oci_error();}else{
+              echo "<meta http-equiv='refresh' content='0;url=?fix_dorm'>";
+            }
+          }
           else{include "./object/room_dorm.php";}
     		 ?>
     	</div>

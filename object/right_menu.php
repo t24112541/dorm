@@ -16,6 +16,7 @@ if($_SESSION['status']=='MNG'){?>
       <ul class="nav navbar-nav">
 
         <li class="<?php if(isset($_GET['HIRE_USER'])){echo 'active';}?>"><a href="?HIRE_USER">ข้อมูลการเช่าห้องพัก</a></li>
+        <li  class="<?php if(isset($_GET['fix_dorm'])){echo 'active';}?>"><a href="?fix_dorm">ข้อมูลการซ่อมบำรุง</a></li>
 
         <li class="dropdown <?php if(isset($_GET['HIRE_PRICE_ADD']) || isset($_GET['HIRE_PRICE']) || isset($_GET['HP_EDIT'])){echo 'active';}?>">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fas fa-file-invoice-dollar"></i> ค่าเช่า<span class="caret"></span></a>

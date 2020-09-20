@@ -1,8 +1,11 @@
 <?php
-	error_reporting(E_ERROR | E_PARSE);
+	// error_reporting(E_ERROR | E_PARSE);
 	date_default_timezone_set("Asia/Bangkok");
 	$arr = json_decode(file_get_contents('./db/db_main.txt'), true)  or die("Unable to open file!");
 
+	$owner="6206021421202";
+	$s_owner="".'"'.$owner.'"'."";
+	
 	$username=$arr['username'];
 	$password=$arr['password'];
 	$host=$arr['host'];
